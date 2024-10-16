@@ -17,10 +17,16 @@ def fetch_stock_data(ticker, period='1mo'):
     """
 
     # Добавим исключение на тот случай, если мы запросили данные по несуществующему тикеру
-    stock = yf.Ticker(ticker)
-    data = stock.history(period=period)
-    logging.info("Данные успешно получены")
-    return data
+    try:
+        stock = yf.Ticker(ticker)
+        data = stock.history(period=period)
+        if data.empty:
+            raise ValueError(f"Данные для тикера {ticker} не найдены.")
+        logging.info("Данные успешно получены")
+        return data
+    except Exception as e:
+        logging.error(f"Ошибка при получении данных для тикера {ticker}: {e}")
+        raise
 
 
 def calculate_and_display_average_price(data):
@@ -45,17 +51,44 @@ def add_moving_average(data, window_size=5):
     return data
 
 
+def notify_if_strong_fluctuations(data, threshold):
+    """
+    Анализирует данные и уведомляет пользователя, если цена акций колебалась более чем на заданный процент за период.
+    data: DataFrame с данными акций, включая столбец 'Close'.
+    threshold: порог в процентах для уведомления о сильных колебаниях.
+    fluctuation: реальные колебания
+    """
+    max_price = data['Close'].max()
+    min_price = data['Close'].min()
+    fluctuation = ((max_price - min_price) / min_price) * 100
+
+    if fluctuation > threshold:
+        logging.info(f"Сильные колебания: {fluctuation:.2f}% превышают порог {threshold}%")
+        print(f"Внимание! Цена акций колебалась более чем на {threshold}% за период.")
+    else:
+        logging.info(f"Колебания в пределах нормы: {fluctuation:.2f}%")
+
+
 # Простое тестирование
 if __name__ == "__main__":
     ticker = "AAPL"
     period = "1mo"
+    threshold = 5  # Порог в процентах для уведомления
 
-    # Получаем данные
-    data = fetch_stock_data(ticker, period)
+    try:
+        # Получаем данные
+        data = fetch_stock_data(ticker, period)
 
-    # Выполняем расчет средней цены с выводом на консоль
-    calculate_and_display_average_price(data)
+        # Выполняем расчет средней цены с выводом на консоль
+        calculate_and_display_average_price(data)
 
-    # Добавляем скользящее среднее и выводим на консоль
-    data_with_ma = add_moving_average(data)
-    print(data_with_ma.head())
+        # Добавляем скользящее среднее и выводим на консоль
+        data_with_ma = add_moving_average(data)
+        print(data_with_ma.head())
+
+        # Проверяем на сильные колебания
+        notify_if_strong_fluctuations(data, threshold)
+
+    except Exception as e:
+        print(f"Ошибка: {e}")
+        exit(1)
