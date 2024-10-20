@@ -69,6 +69,21 @@ def notify_if_strong_fluctuations(data, threshold):
         logging.info(f"Колебания в пределах нормы: {fluctuation:.2f}%")
 
 
+def export_data_to_csv(data, filename):
+    """
+    Экспортирует данные в CSV файл.
+    :data: DataFrame с данными об акциях
+    :filename: Имя файла для сохранения
+    """
+    try:
+        data.to_csv(filename, index=False)  # Сохраняем DataFrame в CSV файл без индексов
+        logging.info(f"Данные успешно сохранены в {filename}")
+        print(f"Данные успешно сохранены в файл: {filename}")
+    except Exception as e:
+        logging.error(f"Ошибка при сохранении данных: {e}")
+        print(f"Ошибка при сохранении данных: {e}")
+
+
 # Простое тестирование
 if __name__ == "__main__":
     ticker = "AAPL"
@@ -88,6 +103,9 @@ if __name__ == "__main__":
 
         # Проверяем на сильные колебания
         notify_if_strong_fluctuations(data, threshold)
+
+        # Выполняем экспорт данных с добавленным скользящим средним в CSV
+        export_data_to_csv(data_with_ma, 'stock_data.csv')
 
     except Exception as e:
         print(f"Ошибка: {e}")
