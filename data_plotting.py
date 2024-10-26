@@ -1,8 +1,25 @@
+"""
+Данный модуль отвечает за визуализацию данных.
+Он содержит функции для создания и сохранения графиков цен закрытия и скользящих средних
+"""
 import matplotlib.pyplot as plt
 import pandas as pd
 
 
 def plot_rsi(data, ticker, period, filename=None):
+    """
+    Функция для построения графика RSI (индекс относительной силы):
+    plt.figure: устанавливает размер графика;
+    plt.plot: непосредственное построение графика RSI;
+    plt.axhline: горизонтальные линии на уровнях 70 (перекупленность) и 30 (перепроданность);
+    plt.title: устанавливаем заголовок графика;
+    plt.xlabel и plt.ylabel: подписи соответственно оси Х и оси Y;
+    plt.legend: отображает легенду.
+
+    Визуализация графика:
+    plt.savefig: сохранение графика в файл
+    plt.show: отображение графика на экране
+    """
     plt.figure(figsize=(10, 4))
     plt.plot(data.index, data['RSI'], label='RSI', color='purple')
     plt.axhline(70, linestyle='--', alpha=0.5, color='red')
@@ -13,7 +30,7 @@ def plot_rsi(data, ticker, period, filename=None):
     plt.legend()
 
     if filename is None:
-        filename = f"{ticker}_{period}_rsi_chart.png"
+        filename = f"{ticker}_{period}_rsi_chart.png"  # Имя файла по умолчанию
 
     plt.savefig(filename)
     print(f"График RSI сохранен как {filename}")
@@ -22,6 +39,11 @@ def plot_rsi(data, ticker, period, filename=None):
 
 
 def plot_macd(data, ticker, period, filename=None):
+    """
+    Функция для построения графика MACD (схождения и расхождения скользящих средних).
+    Описание аналогично функции для построения графика RSI.
+    Отличие состоит в том, что строится одна сигнальная линия, а не две (как было в RSI).
+    """
     plt.figure(figsize=(10, 6))
     plt.plot(data.index, data['MACD'], label='MACD', color='blue')
     plt.plot(data.index, data['Signal_Line'], label='Signal Line', color='orange')
@@ -40,6 +62,12 @@ def plot_macd(data, ticker, period, filename=None):
 
 
 def create_and_save_plot(data, ticker, period, filename=None):
+    """
+    Функция для создания и сохранения графика цен акций и скользящей средней:
+    dates: преобразовывает даты в массив numpy;
+    plt.plot: для построения графика цены закрытия (Close) и графика скользящей средней (Moving_Average).
+    Все остальное по аналогии с двумя предыдущими функциями.
+    """
     plt.figure(figsize=(10, 6))
 
     if pd.api.types.is_datetime64_any_dtype(data.index):
