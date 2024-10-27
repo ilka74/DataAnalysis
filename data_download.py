@@ -1,6 +1,5 @@
 # Данный модуль отвечает за загрузку данных об акциях, он содержит функции для извлечения данных
 # об акциях из интернета и расчета скользящего среднего
-from turtledemo.penrose import start
 
 import yfinance as yf
 import logging
