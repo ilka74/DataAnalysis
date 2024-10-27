@@ -1,5 +1,6 @@
 # Данный модуль отвечает за загрузку данных об акциях, он содержит функции для извлечения данных
 # об акциях из интернета и расчета скользящего среднего
+from turtledemo.penrose import start
 
 import yfinance as yf
 import logging
@@ -9,18 +10,20 @@ from data_plotting import plot_rsi, plot_macd
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
-def fetch_stock_data(ticker, period='1mo'):
+def fetch_stock_data(ticker, period='1mo', start=None, end=None):
     """
     Функция извлекает исторические данные о ценах акций.
     ticker: тикер акции, например, 'AAPL' для Apple.
     period: период времени для данных, например, '1mo' для одного месяца.
     data: исторические данные о цене акций за указанный период.
+    start: дата начала в формате 'YYYY-MM-DD'.
+    end: дата окончания в формате 'YYYY-MM-DD'.
     """
 
     # Добавим исключение на тот случай, если мы запросили данные по несуществующему тикеру
     try:
         stock = yf.Ticker(ticker)
-        data = stock.history(period=period)
+        data = stock.history(period=period, start=start, end=end)
         if data.empty:
             raise ValueError(f"Данные для тикера {ticker} не найдены.")
         logging.info("Данные успешно получены")
@@ -123,8 +126,8 @@ def calculate_macd(data, short_window=12, long_window=26, signal_window=9):
 
 # Простое тестирование
 if __name__ == "__main__":
-    ticker = "AAPL"
-    period = "1mo"
+    ticker = "AMZN"
+    period = "6mo"
     threshold = 5  # Порог в процентах для уведомления
 
     try:
