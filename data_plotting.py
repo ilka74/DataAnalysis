@@ -63,6 +63,28 @@ def plot_macd(data, ticker, period, filename=None, style='default'):
     plt.show()
 
 
+def plot_standard_deviation(data, ticker, period, std_dev, filename=None, style='default'):
+    """
+    Функция для построения графика стандартного отклонения:
+    """
+    plt.style.use(style)
+    plt.figure(figsize=(10, 6))
+    plt.plot(data.index, data['Close'], label='Close Price')
+    plt.axhline(std_dev, color='red', linestyle='--', label=f'Standard Deviation: {std_dev:.2f}')
+    plt.title(f"{ticker} Цена акций и стандартное отклонение ({period})")
+    plt.xlabel("Дата")
+    plt.ylabel("Цена")
+    plt.legend()
+
+    if filename is None:
+        filename = f"{ticker}_{period}_std_dev_chart.png"
+
+    plt.savefig(filename)
+    print(f"График стандартного отклонения сохранен как {filename}")
+    print("Закройте график для продолжения...")
+    plt.show()
+
+
 def create_and_save_plot(data, ticker, period, filename=None, style='default'):
     """
     Функция для создания и сохранения графика цен акций и скользящей средней:

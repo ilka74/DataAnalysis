@@ -123,6 +123,17 @@ def calculate_macd(data, short_window=12, long_window=26, signal_window=9):
     return data
 
 
+def calculate_standard_deviation(data):
+    """
+    Вычисляет стандартное отклонение цены закрытия акций.
+    data: DataFrame с данными акций, включая столбец 'Close'.
+    """
+    std_dev = data['Close'].std()
+    logging.info(f"Стандартное отклонение цены закрытия: {std_dev:.2f}")
+    print(f"Стандартное отклонение цены закрытия за период: {std_dev:.2f}")
+    return std_dev
+
+
 # Простое тестирование
 if __name__ == "__main__":
     ticker = "AMZN"

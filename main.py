@@ -49,15 +49,22 @@ def main():
     # Рассчитываем MACD и добавляем его к данным
     stock_data = dd.calculate_macd(stock_data)
 
+    # Рассчитываем стандартное отклонение цены закрытия
+    std_dev = dd.calculate_standard_deviation(stock_data)
+
     # Запрашиваем стиль графика и проверяем, поддерживается ли данный стиль
     style = input("Выберите стиль графика (например, 'seaborn', 'ggplot', 'bmh', 'classic' и т.д.):").strip()
     if style not in plt.style.available:
         print(f"Стиль '{style}' не поддерживается. Будет использован стиль по умолчанию.")
         style = 'default'
 
-    # Строим график данных
+    # Строим график данных с добавлением стандартного отклонения
     dplt.create_and_save_plot(stock_data, ticker, f"{start_date if period_choice == 'custom' 
     else period} to {end_date if period_choice == 'custom' else period}", style=style)
+
+    # Визуализация стандартного отклонения
+    dplt.plot_standard_deviation(stock_data, ticker, f"{start_date if period_choice == 'custom' else period} "
+                                f"to {end_date if period_choice == 'custom' else period}", std_dev, style=style)
 
     # Визуализация RSI
     dplt.plot_rsi(stock_data, ticker, f"{start_date if period_choice == 'custom' 
