@@ -10,7 +10,7 @@ def main():
           "GOOGL (Alphabet Inc), MSFT (Microsoft Corporation), AMZN (Amazon.com Inc), TSLA (Tesla Inc).")
     print("Общие периоды времени для данных о запасах включают: 1д, 5д, 1мес, 3мес, 6мес, 1г, 2г, 5г, 10л, "
           "с начала года, макс.")
-    print("Вы можете выбрать предустановленны период или ввести свои даты.")
+    print("Вы можете выбрать предустановленный период или ввести свои даты.")
 
     ticker = input("Введите тикер акции (например, «AAPL» для Apple Inc):")
 
@@ -51,6 +51,10 @@ def main():
 
     # Рассчитываем стандартное отклонение цены закрытия
     std_dev = dd.calculate_standard_deviation(stock_data)
+
+    # Визуализация данных с использованием Plotly
+    dplt.plot_interactive_stock_data(stock_data, ticker, f"{start_date if period_choice == 'custom' else period} "
+                                                         f"to {end_date if period_choice == 'custom' else period}")
 
     # Запрашиваем стиль графика и проверяем, поддерживается ли данный стиль
     style = input("Выберите стиль графика (например, 'seaborn', 'ggplot', 'bmh', 'classic' и т.д.):").strip()

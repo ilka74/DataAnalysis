@@ -4,6 +4,7 @@
 """
 import matplotlib.pyplot as plt
 import pandas as pd
+import plotly.graph_objs as go
 
 
 def plot_rsi(data, ticker, period, filename=None, style='default'):
@@ -114,3 +115,29 @@ def create_and_save_plot(data, ticker, period, filename=None, style='default'):
     print(f"График сохранен как {filename}")
     print("Закройте график для продолжения...")
     plt.show()
+
+
+def plot_interactive_stock_data(data, ticker, period):
+    """
+    Функция для построения интерактивного графика цен акций с использованием Plotly.
+    data: DataFrame с данными о ценах акций.
+    ticker: тикер акции, например, 'AAPL'
+    period: период времени для данных
+    fig.add_trace: линии для цен закрытия 'Close' и для скользящего среднего 'Moving_Average', если она присутствует
+    fig.update_layout: настройки графика
+    fig.show: отображение интерактивного графика
+
+    """
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=data.index, y=data['Close'], mode='lines', name='Close Price'))
+
+    if 'Moving_Average' in data.columns:
+        fig.add_trace(go.Scatter(x=data.index, y=data['Moving_Average'], mode='lines', name='Moving Average'))
+
+    fig.update_layout(title=f"{ticker} Цена акций ({period})",
+                      xaxis_title='Дата',
+                      yaxis_title='Цена',
+                      legend_title='Легенда',
+                      hovermode='x unified')
+
+    fig.show()
