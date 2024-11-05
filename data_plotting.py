@@ -2,9 +2,16 @@
 Данный модуль отвечает за визуализацию данных.
 Он содержит функции для создания и сохранения графиков цен закрытия и скользящих средних
 """
+import os
 import matplotlib.pyplot as plt
 import pandas as pd
 import plotly.graph_objs as go
+
+# Путь к папке для сохранения изображений
+images_dir = "images"
+
+# Создаем папку, если она не существует
+os.makedirs(images_dir, exist_ok=True)
 
 
 def plot_rsi(data, ticker, period, filename=None, style='default'):
@@ -32,9 +39,13 @@ def plot_rsi(data, ticker, period, filename=None, style='default'):
     plt.legend()
 
     if filename is None:
-        filename = f"{ticker}_{period}_rsi_chart.png"  # Имя файла по умолчанию
+        # Присваиваем имя файла по умолчанию
+        filename = f"{ticker}_{period}_rsi_chart.png"
 
-    plt.savefig(filename)
+    # Объединяем путь к папке и имя файла
+    filepath = os.path.join(images_dir, filename)
+
+    plt.savefig(filepath)
     print(f"График RSI сохранен как {filename}")
     print("Закройте график для продолжения...")
     plt.show()
@@ -58,7 +69,9 @@ def plot_macd(data, ticker, period, filename=None, style='default'):
     if filename is None:
         filename = f"{ticker}_{period}_macd_chart.png"
 
-    plt.savefig(filename)
+    filepath = os.path.join(images_dir, filename)
+
+    plt.savefig(filepath)
     print(f"График MACD сохранен как {filename}")
     print("Закройте график для продолжения...")
     plt.show()
@@ -80,7 +93,9 @@ def plot_standard_deviation(data, ticker, period, std_dev, filename=None, style=
     if filename is None:
         filename = f"{ticker}_{period}_std_dev_chart.png"
 
-    plt.savefig(filename)
+    filepath = os.path.join(images_dir, filename)
+
+    plt.savefig(filepath)
     print(f"График стандартного отклонения сохранен как {filename}")
     print("Закройте график для продолжения...")
     plt.show()
@@ -110,8 +125,9 @@ def create_and_save_plot(data, ticker, period, filename=None, style='default'):
 
     if filename is None:
         filename = f"{ticker}_{period}_stock_price_chart.png"
+    filepath = os.path.join(images_dir, filename)
 
-    plt.savefig(filename)
+    plt.savefig(filepath)
     print(f"График сохранен как {filename}")
     print("Закройте график для продолжения...")
     plt.show()
